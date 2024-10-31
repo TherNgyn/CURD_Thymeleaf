@@ -3,13 +3,14 @@ package vn.iostart.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
 
 import vn.iostart.entity.CategoryEntity;
 import vn.iostart.repository.CategoryRepository;
@@ -43,15 +44,18 @@ public class CategoryServiceImpl implements ICategoryService {
 			if(opt.isPresent()) {
 				if(StringUtils.isEmpty(entity.getName())) {
 					entity.setName(opt.get().getName());
-				}else {
+				}
+				if(entity.getStatus()==-1) {
+					entity.setStatus(opt.get().getStatus());
+				}
+				else {
 					entity.setName(entity.getName());
+					entity.setStatus(entity.getStatus());
 				}
 			}
 			return category.save(entity);
 		}
-		
 	}
-
 	@Override
 	public <S extends CategoryEntity> Optional<S> findOne(Example<S> example) {
 		return category.findOne(example);
